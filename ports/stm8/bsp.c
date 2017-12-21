@@ -8,10 +8,11 @@
 
 void bsp_init(){
   //clk
-  CLK_HSECmd(ENABLE);
-  while(CLK_GetFlagStatus(CLK_FLAG_HSERDY)==RESET);
+  CLK_HSICmd(ENABLE);
+  while(CLK_GetFlagStatus(CLK_FLAG_HSIRDY)==RESET);
   CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
-  
+  CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
+ 
   //gpio
   GPIO_Init(LED0_PORT,LED0_PIN,GPIO_MODE_OUT_OD_HIZ_SLOW);  
 }

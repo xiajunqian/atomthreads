@@ -34,6 +34,8 @@
 #include "atomport-private.h"
 #include "bsp.h"
 
+#include "w1.h"
+
 /* Constants */
 
 /*
@@ -105,7 +107,12 @@ NEAR static uint8_t idle_thread_stack[IDLE_STACK_SIZE_BYTES];
 /* Forward declarations */
 static void main_thread_func (uint32_t param);
 
-
+extern void ds18b20_init();
+extern uint16_t ds18b20_read(struct w1_master *dev,w1_err_t *err);
+extern uint16_t ds18b20_read2(struct w1_master *dev,w1_err_t *err);
+extern struct w1_master w1_therm_master;
+extern uint16_t ds18b20_match_read(struct w1_master *dev,uint8_t rom[],w1_err_t *err);
+extern uint8_t *ds18b20_get_rom(uint8_t index);
 /**
  * \b main
  *
@@ -184,10 +191,23 @@ NO_REG_SAVE void main ( void )
  */
 static void main_thread_func (uint32_t param){
   uint8_t state=0;
+  uint16_t temp;
+  w1_err_t err;
+  ds18b20_init();
   while (1)  {
-    state^=0x01;
     
-    bsp_led_set(BSP_ID_LED0,state&0x01);
+    temp=ds18b20_read2(&w1_therm_master,&err);
+    temp=ds18b20_read(&w1_therm_master,&err);
+    temp=ds18b20_match_read(&w1_therm_master,ds18b20_get_rom(0),&err);
+    temp=ds18b20_match_read(&w1_therm_master,ds18b20_get_rom(1),&err);
+    temp=ds18b20_match_read(&w1_therm_master,ds18b20_get_rom(2),&err);
+    if(err!=W1_ERR_NONE){
+      state^=0x01;    
+      bsp_led_set(BSP_ID_LED0,state&0x01);
+    }
+    if(temp!=0){
+      bsp_led_set(BSP_ID_LED0,state&0x01);
+    }
     atomTimerDelay (SYSTEM_TICKS_PER_SEC);
   }
 }

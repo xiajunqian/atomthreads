@@ -1608,7 +1608,13 @@
     <group>
         <name>Applacation</name>
         <file>
+            <name>$PROJ_DIR$\ds18b20.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\main.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\w1.c</name>
         </file>
     </group>
     <group>
