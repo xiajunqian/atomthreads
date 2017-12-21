@@ -32,7 +32,7 @@
 #define __ATOM_PORT_H
 
 
-#include "stm8s_type.h"
+#include "stm8s.h"
 
 #if defined(__IAR_SYSTEMS_ICC__)
 #include "intrinsics.h"
@@ -49,16 +49,6 @@
 /**
  * Architecture-specific types.
  */
-#if defined(__CSMC__) || defined (__RCSTM8__) /* Cosmic and Raisonance do not have the C99 stdint.h header*/
-#define int8_t   s8
-#define int16_t  s16
-#define int32_t  s32
-#define uint8_t  u8
-#define uint16_t u16
-#define uint32_t u32
-#else
-#include <stdint.h>
-#endif
 #define POINTER  void *
 
 /* Size of each stack entry / stack alignment size (8 bits on STM8) */
